@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model EmployeeIncomeManagement.Models.AddEmployeeModel
+
+<form method="post">
+    <div >
+        <lable class="form-label">
+            Employee Name
+        </lable>
+        <input type="text" class="form-control" asp-for="Name" />
+    </div>
+    <div >
+        <lable class="form-label">
+            Employee Email
+        </lable>
+        <input type="text" class="form-control" asp-for="Email" />
+    </div>
+    <div >
+        <lable class="form-label">
+            Gross Total Income
+        </lable>
+        <input type="text" class="form-control" asp-for="TotalIncome" />
+    </div>
+    <button type="submit" asp-controller="Employee" asp-action="AddEmployee" class="btn btn-success my-2">Add</button>
+</form>
