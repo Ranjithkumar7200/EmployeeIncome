@@ -9,7 +9,8 @@ namespace EmployeeIncomeManagement.Controllers
     public class EmployeeController : Controller
     {
         private readonly EmployeeDBContext dbContext;
-        public EmployeeController(EmployeeDBContext dBContext) {
+        public EmployeeController(EmployeeDBContext dBContext)
+        {
             this.dbContext = dBContext;
         }
         [HttpGet]
@@ -21,70 +22,58 @@ namespace EmployeeIncomeManagement.Controllers
         [HttpGet]
         public IActionResult AddEmployee()
         {
-           
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> AddEmployee(AddEmployeeModel viewModel)
-
         {
-            
-
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 Int64 income = Convert.ToInt64(viewModel.TotalIncome);
-                Int64 totalGross =0;
-
-                if (income < 250000)
+                Int64 totalGross = 0;
+                if (income <= 250000)
                 {
                     totalGross = income;
                 }
-
-                if (income >250001 && income < 500000)
+                else if (income <= 500000)
                 {
-                   Int64 gross = income / 5;
+                    Int64 gross = income / 5; // 20% tax
                     totalGross = income - gross;
                 }
-               
-                    if ( 500001 < income && income < 750000)
-                    {
-                    Int64 gross = income / 10;
-                    totalGross = income - gross;
-                }
-                if (750001 < income  && income < 1000000)
+                else if (income <= 750000)
                 {
-                    Int64 gross = income / 15;
+                    Int64 gross = income / 10; // 10% tax
                     totalGross = income - gross;
                 }
-                if (1000001 < income  && income < 1250000)
+                else if (income <= 1000000)
                 {
-                    Int64 gross = income / 20;
+                    Int64 gross = income / 15; // Approx 6.67% tax
                     totalGross = income - gross;
                 }
-                if (1250001 < income  && income < 1500000)
+                else if (income <= 1250000)
                 {
-                    Int64 gross = income / 25;
+                    Int64 gross = income / 20; // 5% tax
                     totalGross = income - gross;
                 }
-                if (income >1500001)
+                else if (income <= 1500000)
                 {
-                    Int64 gross = income / 30;
+                    Int64 gross = income / 25; // 4% tax
                     totalGross = income - gross;
                 }
-
-
-
-
+                else
+                {
+                    Int64 gross = income / 30; // Approx 3.33% tax
+                    totalGross = income - gross;
+                }
                 var employee = new Employee
                 {
                     Email = viewModel.Email,
                     Name = viewModel.Name,
-                    TotalIncome = Convert.ToString(totalGross),
+                    TotalIncome = totalGross.ToString(), // Convert to string
                 };
-               await dbContext.Employees.AddAsync(employee);
-               await dbContext.SaveChangesAsync();
+                await dbContext.Employees.AddAsync(employee);
+                await dbContext.SaveChangesAsync();
                 return RedirectToAction("GetEmployee");
-                    
- 
             }
             return View(viewModel);
         }
